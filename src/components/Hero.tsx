@@ -5,18 +5,24 @@
 import React from "react";
 import Home from "./Home";
 import AboutMe from "./AboutMe"; // Your AboutMe component now includes its own background
+import Skills from "./Skills";
+import MyProjects from "./MyProjects";
+import { MyEducation } from "./MyEducation";
 
 const Hero = () => {
   return (
     <div className="w-full">
       {/* Home Section with background */}
-      <div className="relative w-full">
+      {/* <div className="relative w-full"> */}
         <Home />
-      </div>
+      {/* </div> */}
 
       {/* About Me Section - Will have the Neural Network Background */}
       {/* The AboutMe component now contains the background internally */}
       <AboutMe />
+      <Skills/>
+      <MyProjects/>
+      <MyEducation/>
     </div>
   );
 };

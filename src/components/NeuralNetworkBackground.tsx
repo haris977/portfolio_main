@@ -31,7 +31,12 @@ class Node {
     distanceFromRoot: number;
 
     constructor(position: THREE.Vector3, level: number = 0, type: number = 0) {
-        this.position = position;
+        // Validate position to prevent NaN
+        if (!isFinite(position.x) || !isFinite(position.y) || !isFinite(position.z)) {
+            this.position = new THREE.Vector3(0, 0, 0);
+        } else {
+            this.position = position;
+        }
         this.connections = [];
         this.level = level;
         this.type = type;
@@ -41,8 +46,10 @@ class Node {
 
     addConnection(node: Node, strength: number = 1.0): void {
         if (!this.isConnectedTo(node)) {
-            this.connections.push({ node, strength });
-            node.connections.push({ node: this, strength }); // Ensure bidirectional connection
+            // Validate strength to prevent NaN
+            const validStrength = isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 0.5;
+            this.connections.push({ node, strength: validStrength });
+            node.connections.push({ node: this, strength: validStrength }); // Ensure bidirectional connection
         }
     }
 
@@ -312,14 +319,25 @@ const NeuralNetworkBackground: React.FC = () => {
                     Math.cos(phi)
                 );
 
+                // Validate dirVec to prevent NaN
+                if (!isFinite(dirVec.x) || !isFinite(dirVec.y) || !isFinite(dirVec.z)) {
+                    dirVec.set(1, 0, 0); // Fallback to valid vector
+                }
+
                 let prevNode: Node = rootNode;
                 for (let i = 1; i <= nodesPerAxis; i++) {
                     const t: number = i / Math.max(nodesPerAxis, 1);
                     const distance: number = axisLength * Math.pow(t, 0.8);
                     const pos: THREE.Vector3 = new THREE.Vector3().copy(dirVec).multiplyScalar(distance);
+                    
+                    // Validate position to prevent NaN
+                    if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                        pos.set(0, 0, 0); // Fallback to origin
+                    }
+                    
                     const nodeType: number = (i === nodesPerAxis) ? 1 : 0;
                     const newNode: Node = new Node(pos, i, nodeType);
-                    newNode.distanceFromRoot = distance;
+                    newNode.distanceFromRoot = isFinite(distance) ? distance : 0;
                     nodes.push(newNode);
                     prevNode.addConnection(newNode, 1.0 - (t * 0.3));
                     prevNode = newNode;
@@ -341,10 +359,17 @@ const NeuralNetworkBackground: React.FC = () => {
                         ringDist * Math.sin(ringPhi) * Math.sin(ringTheta),
                         ringDist * Math.cos(ringPhi) // Corrected from `Math.cos(phi)` to `Math.cos(ringPhi)`
                     );
+                    
+                    // Validate position to prevent NaN
+                    if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                        pos.set(ringDist, 0, 0); // Fallback to valid position on ring
+                    }
+                    
                     const level: number = Math.ceil(ringDist / 5);
                     const nodeType: number = Math.random() < 0.4 ? 1 : 0;
                     const newNode: Node = new Node(pos, level, nodeType);
-                    newNode.distanceFromRoot = rootNode.position.distanceTo(pos);
+                    const distanceFromRoot = rootNode.position.distanceTo(pos);
+                    newNode.distanceFromRoot = isFinite(distanceFromRoot) ? distanceFromRoot : ringDist;
                     nodes.push(newNode);
                     ringLayer.push(newNode);
                 }
@@ -369,11 +394,13 @@ const NeuralNetworkBackground: React.FC = () => {
                         if (n === rootNode || n === node) continue;
                         if (n.level === 0 || n.type !== 0) continue;
                         const dist: number = node.position.distanceTo(n.position);
-                        if (dist < minDist) { minDist = dist; closestAxisNode = n; }
+                        if (isFinite(dist) && dist < minDist) { minDist = dist; closestAxisNode = n; }
                     }
-                    if (closestAxisNode && minDist < 8) {
+                    if (closestAxisNode && isFinite(minDist) && minDist < 8) {
                         const strength: number = 0.5 + (1 - minDist / 8) * 0.5;
-                        node.addConnection(closestAxisNode, strength);
+                        if (isFinite(strength)) {
+                            node.addConnection(closestAxisNode, strength);
+                        }
                     }
                 }
             }
@@ -404,8 +431,15 @@ const NeuralNetworkBackground: React.FC = () => {
                         THREE.MathUtils.randFloatSpread(3),
                         THREE.MathUtils.randFloatSpread(3)
                     ));
+                    
+                    // Validate position to prevent NaN
+                    if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                        pos.set(0, 0, 0); // Fallback to origin
+                    }
+                    
                     const newNode: Node = new Node(pos, startNode.level, 0);
-                    newNode.distanceFromRoot = rootNode.position.distanceTo(pos);
+                    const distanceFromRoot = rootNode.position.distanceTo(pos);
+                    newNode.distanceFromRoot = isFinite(distanceFromRoot) ? distanceFromRoot : 0;
                     nodes.push(newNode);
                     prevNode.addConnection(newNode, 0.5);
                     prevNode = newNode;
@@ -441,16 +475,29 @@ const NeuralNetworkBackground: React.FC = () => {
                         THREE.MathUtils.randFloatSpread(1),
                         THREE.MathUtils.randFloatSpread(1)
                     ).normalize();
+                    
+                    // Validate randomVec to prevent NaN
+                    if (!isFinite(randomVec.x) || !isFinite(randomVec.y) || !isFinite(randomVec.z)) {
+                        randomVec.set(1, 0, 0);
+                    }
+                    
                     const biasedVec: THREE.Vector3 = new THREE.Vector3().addVectors(
                         dimVec.clone().multiplyScalar(0.6 + Math.random() * 0.4),
                         randomVec.clone().multiplyScalar(0.3)
                     ).normalize();
 
                     const pos: THREE.Vector3 = biasedVec.multiplyScalar(distance);
+                    
+                    // Validate position to prevent NaN
+                    if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                        pos.set(distance, 0, 0); // Fallback to valid position
+                    }
+                    
                     const level: number = Math.floor(distance / 5);
                     const nodeType: number = Math.random() < 0.2 ? 1 : 0;
                     const newNode: Node = new Node(pos, level, nodeType);
-                    newNode.distanceFromRoot = rootNode.position.distanceTo(pos);
+                    const distanceFromRoot = rootNode.position.distanceTo(pos);
+                    newNode.distanceFromRoot = isFinite(distanceFromRoot) ? distanceFromRoot : distance;
                     nodes.push(newNode);
                     dimNodes.push(newNode);
 
@@ -528,17 +575,31 @@ const NeuralNetworkBackground: React.FC = () => {
                         )
                     ).add(randomOffset);
 
+                    // Validate position to prevent NaN
+                    if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                        pos.set(0, 0, 0); // Fallback to origin
+                    }
+
                     const nodeType: number = Math.random() < 0.15 ? 1 : 0;
                     const newNode: Node = new Node(pos, parent.level + 1, nodeType);
-                    newNode.distanceFromRoot = rootNode.position.distanceTo(pos);
+                    const distanceFromRoot = rootNode.position.distanceTo(pos);
+                    newNode.distanceFromRoot = isFinite(distanceFromRoot) ? distanceFromRoot : 0;
                     nodes.push(newNode);
                     parent.addConnection(newNode, 0.7 + Math.random() * 0.3);
                     queue.push(newNode);
                     currentNodeCount++;
 
                     if (Math.random() < branchProbability && parent.level < maxLevel - 1) {
-                        const branchNode: Node = new Node(parent.position.clone().add(randomOffset.multiplyScalar(0.5)), parent.level + 1, 0);
-                        branchNode.distanceFromRoot = rootNode.position.distanceTo(branchNode.position);
+                        const branchPos = parent.position.clone().add(randomOffset.multiplyScalar(0.5));
+                        
+                        // Validate branch position to prevent NaN
+                        if (!isFinite(branchPos.x) || !isFinite(branchPos.y) || !isFinite(branchPos.z)) {
+                            branchPos.set(0, 0, 0);
+                        }
+                        
+                        const branchNode: Node = new Node(branchPos, parent.level + 1, 0);
+                        const branchDistanceFromRoot = rootNode.position.distanceTo(branchPos);
+                        branchNode.distanceFromRoot = isFinite(branchDistanceFromRoot) ? branchDistanceFromRoot : 0;
                         nodes.push(branchNode);
                         parent.addConnection(branchNode, 0.5);
                     }
@@ -549,8 +610,11 @@ const NeuralNetworkBackground: React.FC = () => {
             for (let i = 0; i < numSecondaryConnections; i++) {
                 const node1: Node = nodes[Math.floor(Math.random() * nodes.length)];
                 const node2: Node = nodes[Math.floor(Math.random() * nodes.length)];
-                if (node1 !== node2 && !node1.isConnectedTo(node2) && node1.position.distanceTo(node2.position) < 10) {
-                    node1.addConnection(node2, Math.random() * 0.3 + 0.2);
+                if (node1 !== node2 && !node1.isConnectedTo(node2)) {
+                    const distance = node1.position.distanceTo(node2.position);
+                    if (isFinite(distance) && distance < 10) {
+                        node1.addConnection(node2, Math.random() * 0.3 + 0.2);
+                    }
                 }
             }
         };
@@ -575,9 +639,16 @@ const NeuralNetworkBackground: React.FC = () => {
                             y * spacing - offset + THREE.MathUtils.randFloatSpread(0.5),
                             z * spacing - offset + THREE.MathUtils.randFloatSpread(0.5)
                         );
+                        
+                        // Validate position to prevent NaN
+                        if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                            pos.set(x * spacing - offset, y * spacing - offset, z * spacing - offset);
+                        }
+                        
                         const nodeType: number = Math.random() < 0.1 ? 1 : 0;
                         const newNode: Node = new Node(pos, 0, nodeType);
-                        newNode.distanceFromRoot = rootNode.position.distanceTo(pos);
+                        const distanceFromRoot = rootNode.position.distanceTo(pos);
+                        newNode.distanceFromRoot = isFinite(distanceFromRoot) ? distanceFromRoot : 0;
                         nodes.push(newNode);
                         grid[x][y][z] = newNode;
                     }
@@ -609,8 +680,11 @@ const NeuralNetworkBackground: React.FC = () => {
             for (let i = 0; i < numRandomConnections; i++) {
                 const node1: Node = nodes[Math.floor(Math.random() * nodes.length)];
                 const node2: Node = nodes[Math.floor(Math.random() * nodes.length)];
-                if (node1 !== node2 && !node1.isConnectedTo(node2) && node1.position.distanceTo(node2.position) > spacing * 2) {
-                    node1.addConnection(node2, Math.random() * 0.2 + 0.1);
+                if (node1 !== node2 && !node1.isConnectedTo(node2)) {
+                    const distance = node1.position.distanceTo(node2.position);
+                    if (isFinite(distance) && distance > spacing * 2) {
+                        node1.addConnection(node2, Math.random() * 0.2 + 0.1);
+                    }
                 }
             }
         };
@@ -627,9 +701,16 @@ const NeuralNetworkBackground: React.FC = () => {
                     THREE.MathUtils.randFloatSpread(maxRadius * 2),
                     THREE.MathUtils.randFloatSpread(maxRadius * 2)
                 );
+                
+                // Validate position to prevent NaN
+                if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
+                    pos.set(0, 0, 0); // Fallback to origin
+                }
+                
                 const nodeType: number = Math.random() < 0.2 ? 1 : 0;
                 const newNode: Node = new Node(pos, 0, nodeType);
-                newNode.distanceFromRoot = rootNode.position.distanceTo(pos);
+                const distanceFromRoot = rootNode.position.distanceTo(pos);
+                newNode.distanceFromRoot = isFinite(distanceFromRoot) ? distanceFromRoot : 0;
                 nodes.push(newNode);
             }
 
@@ -643,7 +724,7 @@ const NeuralNetworkBackground: React.FC = () => {
                     const node2: Node = nodes[j];
                     if (node1 === node2) continue;
                     const dist: number = node1.position.distanceTo(node2.position);
-                    if (dist < connectionRadius) {
+                    if (isFinite(dist) && dist < connectionRadius) {
                         potentialConnections.push({ node: node2, dist: dist });
                     }
                 }
@@ -653,13 +734,18 @@ const NeuralNetworkBackground: React.FC = () => {
                 for (let k = 0; k < Math.min(potentialConnections.length, maxConnections); k++) {
                     const { node: node2, dist } = potentialConnections[k];
                     const strength: number = 1.0 - (dist / Math.max(connectionRadius, 0.1)) * 0.7;
-                    node1.addConnection(node2, strength);
+                    if (isFinite(strength)) {
+                        node1.addConnection(node2, strength);
+                    }
                 }
             }
 
             for (const node of nodes) {
-                if (rootNode && node !== rootNode && rootNode.connections.length < 10 && rootNode.position.distanceTo(node.position) < 15) {
-                    rootNode.addConnection(node, 0.8);
+                if (rootNode && node !== rootNode && rootNode.connections.length < 10) {
+                    const distance = rootNode.position.distanceTo(node.position);
+                    if (isFinite(distance) && distance < 15) {
+                        rootNode.addConnection(node, 0.8);
+                    }
                 }
             }
         };
@@ -673,6 +759,15 @@ const NeuralNetworkBackground: React.FC = () => {
             // Ensure we have nodes to render
             if (nodes.length === 0) return;
 
+            // Filter out nodes with invalid positions
+            const validNodes = nodes.filter(node => 
+                isFinite(node.position.x) && 
+                isFinite(node.position.y) && 
+                isFinite(node.position.z)
+            );
+
+            if (validNodes.length === 0) return;
+
             if (nodeMeshRef.current) scene.remove(nodeMeshRef.current);
             if (connectionMeshRef.current) scene.remove(connectionMeshRef.current);
 
@@ -682,7 +777,7 @@ const NeuralNetworkBackground: React.FC = () => {
             const nodeColors: number[] = [];
             const nodeDistancesFromRoot: number[] = [];
 
-            nodes.forEach((node: Node) => {
+            validNodes.forEach((node: Node) => {
                 // Validate position values to prevent NaN
                 const x = isNaN(node.position.x) ? 0 : node.position.x;
                 const y = isNaN(node.position.y) ? 0 : node.position.y;
@@ -732,8 +827,11 @@ const NeuralNetworkBackground: React.FC = () => {
             let pathIndexCounter: number = 0;
             const uniqueConnections = new Set<string>();
 
-            nodes.forEach((node: Node) => {
+            validNodes.forEach((node: Node) => {
                 node.connections.forEach((connection: { node: Node; strength: number }) => {
+                    // Only process connections to valid nodes
+                    if (!validNodes.includes(connection.node)) return;
+                    
                     const p1: THREE.Vector3 = node.position;
                     const p2: THREE.Vector3 = connection.node.position;
 
@@ -765,8 +863,11 @@ const NeuralNetworkBackground: React.FC = () => {
             const endPoints: number[] = [];
             uniqueConnections.clear(); // Clear for a fresh pass to populate start/end points correctly for segments
 
-            nodes.forEach((node: Node) => {
+            validNodes.forEach((node: Node) => {
                 node.connections.forEach((connection: { node: Node; strength: number }) => {
+                    // Only process connections to valid nodes
+                    if (!validNodes.includes(connection.node)) return;
+                    
                     const p1: THREE.Vector3 = node.position;
                     const p2: THREE.Vector3 = connection.node.position;
                     
