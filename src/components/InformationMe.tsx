@@ -1,85 +1,60 @@
-"use client"
-import React from 'react'
-import { FloatingDock } from './ui/FloatingDock';
-import { SiGmail } from "react-icons/si";
-import { VscGithub } from "react-icons/vsc";  
-import { FaWhatsapp } from "react-icons/fa";  
-import { FaLinkedinIn } from "react-icons/fa";
-import { SiLeetcode } from "react-icons/si";
-import { SiCodechef } from "react-icons/si";
-import { SiCodeforces } from "react-icons/si";
+"use client";
+
+import { FloatingDock } from "@/components/ui/FloatingDock";
+import { SiGmail, SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
+import { VscGithub } from "react-icons/vsc";
+import { FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
+
+const handleGmailClick = () => {
+  const email = "harismanzar@gmail.com";
+  navigator.clipboard.writeText(email).then(() => {
+    alert("📋 Email copied to clipboard! Opening Gmail...");
+    window.open(`mailto:${email}`, "_blank");
+  });
+};
+
 export function FloatingDockDemo() {
   const links = [
     {
       title: "Gmail",
-      icon: (
-        <SiGmail className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
-    },
- 
-    {
-      title: "Linkdin",
-      icon: (
-        <FaLinkedinIn className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
+      icon: <SiGmail className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      onClick: handleGmailClick,
     },
     {
-      title: "Whatsapp",
-      icon: (
-        <FaWhatsapp className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
+      title: "LinkedIn",
+      icon: <FaLinkedinIn className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      href: "https://www.linkedin.com/in/md-haris-manzar/",
+    },
+    {
+      title: "WhatsApp",
+      icon: <FaWhatsapp className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      href: "https://wa.me/917260944984",
     },
     {
       title: "GitHub",
-      icon: (
-        <VscGithub className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
+      icon: <VscGithub className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      href: "https://github.com/haris977",
     },
- 
     {
       title: "Leetcode",
-      icon: (
-        <SiLeetcode className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
+      icon: <SiLeetcode className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      href: "https://leetcode.com/u/harismanzar977/",
     },
     {
-      title: "Code Forces",
-      icon: (
-        <SiCodeforces className="h-full w-full text-neutral-500 dark:text-neutral-300" />
-      ),
-      href: "#",
+      title: "Codeforces",
+      icon: <SiCodeforces className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      href: "https://codeforces.com/profile/haris123",
     },
     {
-      title: "Code Chef",
-      icon: (
-        <SiCodechef
-        />
-      ),
-      href: "#",
+      title: "CodeChef",
+      icon: <SiCodechef className="w-full h-full text-neutral-500 dark:text-neutral-300" />,
+      href: "https://www.codechef.com/users/haris_a31",
     },
   ];
-  return (
-    <>
-      <FloatingDock
-        mobileClassName="translate-y-20" // only for demo, remove for production
-        items={links}
-        />
 
-        </>
+  return (
+    <div className="mt-10 flex justify-center">
+      <FloatingDock items={links} />
+    </div>
   );
 }
-
-
-
-{/* <SiGmail className="hover:bg-red-400 rounded-md cursor-pointer" />
-            <VscGithub className="rounded-md cursor-pointer" />
-            <FaWhatsapp className="hover:bg-green-800 rounded-md cursor-pointer" />
-            <FaLinkedinIn className="hover:bg-blue-800 rounded-md cursor-pointer" />
-            <SiLeetcode className="hover:bg-amber-500 rounded-md cursor-pointer" />
-            <SiCodeforces className="hover:bg-[rgb(46,55,18)] rounded-md cursor-pointer" />
-            <SiCodechef className="hover:bg-amber-950 rounded-md cursor-pointer" /> */}

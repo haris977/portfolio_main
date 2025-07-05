@@ -10,15 +10,16 @@ import { SiLeetcode } from "react-icons/si";
 import { SiCodechef } from "react-icons/si";
 import { SiCodeforces } from "react-icons/si";
 import DownloadButton from './DownloadButton';
-
 import { MdOutlineCloudDownload } from "react-icons/md";
 import FallingStar from './ui/FallingStar';
 import NeuralNetworkBackground from './NeuralNetworkBackground';
 import DownloadButtonUi from './DownloadButtonUi';
 import { FloatingDockDemo } from './InformationMe';
+import BubbleContact from './ui/BubbleContact'
 const Home = () => {
   return (
     <div className="relative min-h-full bg-black w-full">
+      
       {/* Neural Network Background */}
       {/* <div className="absolute inset-0 z-5 w-full min-w-full">
         <NeuralNetworkBackground />
@@ -47,12 +48,22 @@ const Home = () => {
           />
         </div>
       </div>
+      
+    <div className="relative z-20 flex justify-center items-center py-8">
+      <DownloadButtonUi />
+    </div>
+  
 
+  {/* ✅ Your hoho fixed floating div — outside layout */}
+  <div className="relative min-h-full bg-black w-full">
+    {/* ...your main content here... */}
+    
+    {/* ✅ Floating contact bubble */}
+    <BubbleContact />
+  </div>
       {/* Download Button */}
-      <div className="relative z-20 flex justify-center items-center py-8">
-        <DownloadButtonUi />
       </div>
-</div>
+     
 
     
   );
