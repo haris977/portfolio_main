@@ -1,16 +1,6 @@
 import { div } from 'framer-motion/client';
 import Image from 'next/image';
-import {HoverBorderGradient} from '@/components/ui/BorderGradient'
 import Rotatingword from './Rotatingword';
-import { SiGmail } from "react-icons/si";
-import { VscGithub } from "react-icons/vsc";  
-import { FaWhatsapp } from "react-icons/fa";  
-import { FaLinkedinIn } from "react-icons/fa";
-import { SiLeetcode } from "react-icons/si";
-import { SiCodechef } from "react-icons/si";
-import { SiCodeforces } from "react-icons/si";
-import DownloadButton from './DownloadButton';
-import { MdOutlineCloudDownload } from "react-icons/md";
 import FallingStar from './ui/FallingStar';
 import NeuralNetworkBackground from './NeuralNetworkBackground';
 import DownloadButtonUi from './DownloadButtonUi';
@@ -21,9 +11,9 @@ const Home = () => {
     <div className="relative min-h-full bg-black w-full">
       
       {/* Neural Network Background */}
-      {/* <div className="absolute inset-0 z-5 w-full min-w-full">
+      <div className="absolute inset-0 z-5 w-full min-w-full">
         <NeuralNetworkBackground />
-      </div> */}
+      </div>
       {/* Centered Falling Stars */}
       <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-10">
         <FallingStar />

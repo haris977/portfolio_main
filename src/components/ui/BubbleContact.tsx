@@ -20,12 +20,12 @@ const ContactBubble = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-10 z-50">
+    <div className="fixed bottom-5 right-10 z-50 ">
       <div className="relative">
         {/* Toggle Button (Main Circle) */}
         <button
           onClick={() => setOpen((prev) => !prev)}
-          className="w-15 h-15 rounded-full bg-blue-900 text-white flex items-center justify-center shadow-md"
+          className="w-15 h-15 rounded-full hover:cursor-pointer bg-blue-900 text-white flex items-center justify-center shadow-md"
         >
           <RiContactsFill />
         </button>
@@ -43,7 +43,7 @@ const ContactBubble = () => {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 onClick={handleGmailClick}
-                className="w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center"
+                className="w-12 h-12 rounded-full hover:cursor-pointer bg-red-500 text-white flex items-center justify-center"
                 title="Email Me"
               >
                 <SiGmail />
@@ -51,7 +51,7 @@ const ContactBubble = () => {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 onClick={handleWhatsappClick}
-                className="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center"
+                className="w-12 h-12 rounded-full hover:cursor-pointer bg-green-500 text-white flex items-center justify-center"
                 title="WhatsApp Me"
               >
                 <FaWhatsapp />

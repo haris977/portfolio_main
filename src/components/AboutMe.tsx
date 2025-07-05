@@ -8,9 +8,9 @@ import NeuralNetworkBackground from '@/components/NeuralNetworkBackground';
 const AboutMe = () => {
   return (
     <div className="relative w-full pt-32 h-screen bg-black flex flex-col items-center min-w-full">
-      {/* <div className="absolute inset-0 z-5 w-full min-w-full">
+      <div className="absolute inset-0 z-5 w-full min-w-full">
         <NeuralNetworkBackground />
-      </div> */}
+      </div>
 
       <div className="relative z-10 flex w-full h-full items-center justify-around text-white space-x-3">
         <div className="text-4xl font-bold">
