@@ -89,7 +89,7 @@ export function MyEducation() {
     },
   ];
   return (
-    <div className="relative bg-black w-full h-full overflow-clip">
+    <div id="education" className="relative bg-black w-full overflow-clip pt-0">
       <Timeline data={data} />
     </div>
   );

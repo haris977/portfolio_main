@@ -8,7 +8,7 @@ import { FloatingDockDemo } from './InformationMe';
 import BubbleContact from './ui/BubbleContact'
 const Home = () => {
   return (
-    <div className="relative min-h-full bg-black w-full">
+    <div id="home" className="relative min-h-screen bg-black w-full">
       
       {/* Neural Network Background */}
       <div className="absolute inset-0 z-5 w-full min-w-full">
@@ -19,22 +19,22 @@ const Home = () => {
         <FallingStar />
       </div>
   {/* Main Content */}
-        <div className="relative z-20 pt-48 text-white flex justify-between px-20 items-center">
-        <div className="flex flex-col items-start space-y-2 pt-7">
-          <div className="font-bold text-5xl pt-7">Haris Manzar</div>
+        <div className="relative z-20 pt-32 md:pt-48 text-white flex flex-col md:flex-row justify-between px-6 md:px-20 items-center gap-8 md:gap-0">
+        <div className="flex flex-col items-center md:items-start space-y-2 pt-7 text-center md:text-left">
+          <div className="font-bold text-3xl md:text-5xl pt-7">Haris Manzar</div>
           <Rotatingword />
-          <div className="flex space-x-3 py-5 pt-10 text-3xl ">
+          <div className="flex space-x-3 py-5 pt-10 text-xl md:text-3xl">
             <FloatingDockDemo/>
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-center md:justify-end">
           <Image
             src="/MY_best_pic_corp_copy-removebg-preview.png"
             alt="My Best Pic"
-            width={300}
-            height={300}
-            className="rounded-full"
+            width={250}
+            height={250}
+            className="rounded-full w-48 h-48 md:w-72 md:h-72"
           />
         </div>
       </div>
