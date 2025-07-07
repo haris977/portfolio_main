@@ -1,4 +1,4 @@
-// FRONTEND/src/components/NeuralNetworkBackground.tsx
+
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback, ChangeEvent, MouseEvent as ReactMouseEvent } from 'react';
@@ -10,7 +10,6 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
-// Define interface for shader uniforms
 interface PulseUniforms {
     uTime: { value: number };
     uPulsePositions: { value: THREE.Vector3[] };
@@ -21,17 +20,15 @@ interface PulseUniforms {
     uActivePalette: { value: number };
 }
 
-// Define the Node class with explicit types
 class Node {
     position: THREE.Vector3;
     connections: { node: Node; strength: number }[];
     level: number;
-    type: number; // 0 for main, 1 for supporting
+    type: number; 
     size: number;
     distanceFromRoot: number;
 
     constructor(position: THREE.Vector3, level: number = 0, type: number = 0) {
-        // Validate position to prevent NaN
         if (!isFinite(position.x) || !isFinite(position.y) || !isFinite(position.z)) {
             this.position = new THREE.Vector3(0, 0, 0);
         } else {
@@ -46,10 +43,9 @@ class Node {
 
     addConnection(node: Node, strength: number = 1.0): void {
         if (!this.isConnectedTo(node)) {
-            // Validate strength to prevent NaN
             const validStrength = isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 0.5;
             this.connections.push({ node, strength: validStrength });
-            node.connections.push({ node: this, strength: validStrength }); // Ensure bidirectional connection
+            node.connections.push({ node: this, strength: validStrength }); 
         }
     }
 
@@ -62,23 +58,20 @@ const NeuralNetworkBackground: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isClient, setIsClient] = useState<boolean>(false);
 
-    // Three.js object refs, explicitly typed
     const sceneRef = useRef<THREE.Scene | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const composerRef = useRef<EffectComposer | null>(null);
     const controlsRef = useRef<OrbitControls | null>(null);
-    const nodeMeshRef = useRef<THREE.Points | null>(null); // THREE.Points for nodes
-    const connectionMeshRef = useRef<THREE.Points | null>(null); // THREE.Points for connections
+    const nodeMeshRef = useRef<THREE.Points | null>(null);
+    const connectionMeshRef = useRef<THREE.Points | null>(null);
 
     const animationFrameIdRef = useRef<number | null>(null);
     const lastTimeRef = useRef<number>(0);
-    const pulseUniformsRef = useRef<PulseUniforms | null>(null); // Typed uniforms
+    const pulseUniformsRef = useRef<PulseUniforms | null>(null); 
     const clickQueueRef = useRef<{ position: THREE.Vector3; color: THREE.Color }[]>([]);
-    const pulseIntervalIdRef = useRef<NodeJS.Timeout | null>(null); // NodeJS.Timeout for setInterval return
-
-    // Configuration and Palettes - using useRef to maintain state across re-renders without triggering them
-    const config = useRef<{
+    const pulseIntervalIdRef = useRef<NodeJS.Timeout | null>(null); 
+     const config = useRef<{
         paused: boolean;
         activePaletteIndex: number;
         currentFormation: number;
@@ -88,7 +81,7 @@ const NeuralNetworkBackground: React.FC = () => {
         paused: false,
         activePaletteIndex: 1,
         currentFormation: 0,
-        numFormations: 5, // Updated to 5 to include generateRandomWeb
+        numFormations: 5, 
         densityFactor: 1
     });
 
@@ -290,21 +283,18 @@ const NeuralNetworkBackground: React.FC = () => {
             gl_FragColor = vec4(finalColor, alpha);
         }`
     };
-
-    // Nodes array needs to be a ref
     const nodesRef = useRef<Node[]>([]);
     const rootNodeRef = useRef<Node | null>(null);
 
-    // Function to generate the neural network based on current formation and density
     const generateNeuralNetwork = useCallback((): void => {
         const nodes: Node[] = nodesRef.current;
         let rootNode: Node | null;
-        nodes.length = 0; // Clear existing nodes
+        nodes.length = 0; 
 
         const generateQuantumCortex = (): void => {
             rootNode = new Node(new THREE.Vector3(0, 0, 0), 0, 0); rootNode.size = 1.5; nodes.push(rootNode);
-            rootNodeRef.current = rootNode; // Set rootNodeRef
-            const layers: number = 5; // Unused, keeping for consistency with original code
+            rootNodeRef.current = rootNode; 
+            const layers: number = 5; 
             const primaryAxes: number = 6;
             const nodesPerAxis: number = 8;
             const axisLength: number = 20;
@@ -319,9 +309,8 @@ const NeuralNetworkBackground: React.FC = () => {
                     Math.cos(phi)
                 );
 
-                // Validate dirVec to prevent NaN
                 if (!isFinite(dirVec.x) || !isFinite(dirVec.y) || !isFinite(dirVec.z)) {
-                    dirVec.set(1, 0, 0); // Fallback to valid vector
+                    dirVec.set(1, 0, 0); 
                 }
 
                 let prevNode: Node = rootNode;
@@ -330,9 +319,8 @@ const NeuralNetworkBackground: React.FC = () => {
                     const distance: number = axisLength * Math.pow(t, 0.8);
                     const pos: THREE.Vector3 = new THREE.Vector3().copy(dirVec).multiplyScalar(distance);
                     
-                    // Validate position to prevent NaN
                     if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-                        pos.set(0, 0, 0); // Fallback to origin
+                        pos.set(0, 0, 0);
                     }
                     
                     const nodeType: number = (i === nodesPerAxis) ? 1 : 0;
@@ -359,10 +347,8 @@ const NeuralNetworkBackground: React.FC = () => {
                         ringDist * Math.sin(ringPhi) * Math.sin(ringTheta),
                         ringDist * Math.cos(ringPhi) // Corrected from `Math.cos(phi)` to `Math.cos(ringPhi)`
                     );
-                    
-                    // Validate position to prevent NaN
                     if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-                        pos.set(ringDist, 0, 0); // Fallback to valid position on ring
+                        pos.set(ringDist, 0, 0); 
                     }
                     
                     const level: number = Math.ceil(ringDist / 5);
@@ -432,9 +418,8 @@ const NeuralNetworkBackground: React.FC = () => {
                         THREE.MathUtils.randFloatSpread(3)
                     ));
                     
-                    // Validate position to prevent NaN
                     if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-                        pos.set(0, 0, 0); // Fallback to origin
+                        pos.set(0, 0, 0); 
                     }
                     
                     const newNode: Node = new Node(pos, startNode.level, 0);
@@ -476,7 +461,6 @@ const NeuralNetworkBackground: React.FC = () => {
                         THREE.MathUtils.randFloatSpread(1)
                     ).normalize();
                     
-                    // Validate randomVec to prevent NaN
                     if (!isFinite(randomVec.x) || !isFinite(randomVec.y) || !isFinite(randomVec.z)) {
                         randomVec.set(1, 0, 0);
                     }
@@ -488,9 +472,8 @@ const NeuralNetworkBackground: React.FC = () => {
 
                     const pos: THREE.Vector3 = biasedVec.multiplyScalar(distance);
                     
-                    // Validate position to prevent NaN
                     if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-                        pos.set(distance, 0, 0); // Fallback to valid position
+                        pos.set(distance, 0, 0); 
                     }
                     
                     const level: number = Math.floor(distance / 5);
@@ -511,7 +494,6 @@ const NeuralNetworkBackground: React.FC = () => {
                 dimensionNodes.push(dimNodes);
             }
 
-            // Connect nodes between different dimensions
             for (let i = 0; i < dimensions; i++) {
                 for (let j = i + 1; j < dimensions; j++) {
                     const dim1: Node[] = dimensionNodes[i];
@@ -528,7 +510,6 @@ const NeuralNetworkBackground: React.FC = () => {
                 }
             }
 
-            // Add some random connections within dimensions
             for (const dim of dimensionNodes) {
                 const connectionsToMake: number = Math.floor(dim.length * 0.5 * config.current.densityFactor);
                 for (let k = 0; k < connectionsToMake; k++) {
@@ -575,9 +556,8 @@ const NeuralNetworkBackground: React.FC = () => {
                         )
                     ).add(randomOffset);
 
-                    // Validate position to prevent NaN
                     if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-                        pos.set(0, 0, 0); // Fallback to origin
+                        pos.set(0, 0, 0); 
                     }
 
                     const nodeType: number = Math.random() < 0.15 ? 1 : 0;
@@ -592,7 +572,6 @@ const NeuralNetworkBackground: React.FC = () => {
                     if (Math.random() < branchProbability && parent.level < maxLevel - 1) {
                         const branchPos = parent.position.clone().add(randomOffset.multiplyScalar(0.5));
                         
-                        // Validate branch position to prevent NaN
                         if (!isFinite(branchPos.x) || !isFinite(branchPos.y) || !isFinite(branchPos.z)) {
                             branchPos.set(0, 0, 0);
                         }
@@ -640,7 +619,6 @@ const NeuralNetworkBackground: React.FC = () => {
                             z * spacing - offset + THREE.MathUtils.randFloatSpread(0.5)
                         );
                         
-                        // Validate position to prevent NaN
                         if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
                             pos.set(x * spacing - offset, y * spacing - offset, z * spacing - offset);
                         }
@@ -702,9 +680,8 @@ const NeuralNetworkBackground: React.FC = () => {
                     THREE.MathUtils.randFloatSpread(maxRadius * 2)
                 );
                 
-                // Validate position to prevent NaN
                 if (!isFinite(pos.x) || !isFinite(pos.y) || !isFinite(pos.z)) {
-                    pos.set(0, 0, 0); // Fallback to origin
+                    pos.set(0, 0, 0); 
                 }
                 
                 const nodeType: number = Math.random() < 0.2 ? 1 : 0;
@@ -754,12 +731,10 @@ const NeuralNetworkBackground: React.FC = () => {
             const scene = sceneRef.current;
             const pulseUniforms = pulseUniformsRef.current;
 
-            if (!scene || !pulseUniforms) return; // Ensure scene and uniforms are available
+            if (!scene || !pulseUniforms) return; 
 
-            // Ensure we have nodes to render
             if (nodes.length === 0) return;
 
-            // Filter out nodes with invalid positions
             const validNodes = nodes.filter(node => 
                 isFinite(node.position.x) && 
                 isFinite(node.position.y) && 
@@ -778,7 +753,6 @@ const NeuralNetworkBackground: React.FC = () => {
             const nodeDistancesFromRoot: number[] = [];
 
             validNodes.forEach((node: Node) => {
-                // Validate position values to prevent NaN
                 const x = isNaN(node.position.x) ? 0 : node.position.x;
                 const y = isNaN(node.position.y) ? 0 : node.position.y;
                 const z = isNaN(node.position.z) ? 0 : node.position.z;
@@ -790,7 +764,6 @@ const NeuralNetworkBackground: React.FC = () => {
                 nodeDistancesFromRoot.push(isNaN(node.distanceFromRoot) ? 0 : node.distanceFromRoot);
             });
 
-            // Additional validation to ensure no NaN values in arrays
             const validatedNodePositions = nodePositions.map(val => isFinite(val) ? val : 0);
             const validatedNodeSizes = nodeSizes.map(val => isFinite(val) ? val : 1);
             const validatedNodeTypes = nodeTypes.map(val => isFinite(val) ? val : 0);
@@ -804,7 +777,6 @@ const NeuralNetworkBackground: React.FC = () => {
             nodeGeometry.setAttribute('nodeColor', new THREE.Float32BufferAttribute(validatedNodeColors, 3));
             nodeGeometry.setAttribute('distanceFromRoot', new THREE.Float32BufferAttribute(validatedNodeDistancesFromRoot, 1));
 
-            // Only create node mesh if we have valid positions
             if (validatedNodePositions.length > 0) {
                 const nodeMaterial = new THREE.ShaderMaterial({
                     uniforms: pulseUniforms as unknown as { [uniform: string]: THREE.IUniform<any> }, // Cast to generic uniforms type
@@ -829,13 +801,12 @@ const NeuralNetworkBackground: React.FC = () => {
 
             validNodes.forEach((node: Node) => {
                 node.connections.forEach((connection: { node: Node; strength: number }) => {
-                    // Only process connections to valid nodes
+                    
                     if (!validNodes.includes(connection.node)) return;
                     
                     const p1: THREE.Vector3 = node.position;
                     const p2: THREE.Vector3 = connection.node.position;
 
-                    // Validate position values to prevent NaN
                     const p1x = isNaN(p1.x) ? 0 : p1.x;
                     const p1y = isNaN(p1.y) ? 0 : p1.y;
                     const p1z = isNaN(p1.z) ? 0 : p1.z;
@@ -843,11 +814,10 @@ const NeuralNetworkBackground: React.FC = () => {
                     const p2y = isNaN(p2.y) ? 0 : p2.y;
                     const p2z = isNaN(p2.z) ? 0 : p2.z;
 
-                    // Create a unique identifier for the connection
                     const connectionId: string = [p1x, p1y, p1z, p2x, p2y, p2z].sort().join(',');
 
                     if (!uniqueConnections.has(connectionId)) {
-                        for (let i = 0; i <= 20; i++) { // 20 segments per connection
+                        for (let i = 0; i <= 20; i++) { 
                             connectionPositions.push(i / 20);
                             connectionStrengths.push(isNaN(connection.strength) ? 0.5 : connection.strength);
                             connectionPathIndices.push(pathIndexCounter);
@@ -861,17 +831,15 @@ const NeuralNetworkBackground: React.FC = () => {
 
             const startPoints: number[] = [];
             const endPoints: number[] = [];
-            uniqueConnections.clear(); // Clear for a fresh pass to populate start/end points correctly for segments
-
+            uniqueConnections.clear(); 
             validNodes.forEach((node: Node) => {
                 node.connections.forEach((connection: { node: Node; strength: number }) => {
-                    // Only process connections to valid nodes
+               
                     if (!validNodes.includes(connection.node)) return;
                     
                     const p1: THREE.Vector3 = node.position;
                     const p2: THREE.Vector3 = connection.node.position;
                     
-                    // Validate position values to prevent NaN
                     const p1x = isNaN(p1.x) ? 0 : p1.x;
                     const p1y = isNaN(p1.y) ? 0 : p1.y;
                     const p1z = isNaN(p1.z) ? 0 : p1.z;
@@ -891,7 +859,6 @@ const NeuralNetworkBackground: React.FC = () => {
                 });
             });
 
-            // Additional validation to ensure no NaN values in connection arrays
             const validatedConnectionPositions = connectionPositions.map(val => isFinite(val) ? val : 0);
             const validatedStartPoints = startPoints.map(val => isFinite(val) ? val : 0);
             const validatedEndPoints = endPoints.map(val => isFinite(val) ? val : 0);
@@ -907,7 +874,6 @@ const NeuralNetworkBackground: React.FC = () => {
             connectionGeometry.setAttribute('pathIndex', new THREE.Float32BufferAttribute(validatedConnectionPathIndices, 1));
             connectionGeometry.setAttribute('connectionColor', new THREE.Float32BufferAttribute(validatedConnectionColors, 3));
 
-            // Only create connection mesh if we have connections
             if (validatedConnectionPositions.length > 0) {
                 const connectionMaterial = new THREE.ShaderMaterial({
                     uniforms: pulseUniforms as unknown as { [uniform: string]: THREE.IUniform<any> },
@@ -938,9 +904,7 @@ const NeuralNetworkBackground: React.FC = () => {
         renderNetwork();
     }, []);
 
-
-    // Animation loop
-    const animate = useCallback((time: DOMHighResTimeStamp): void => { // DOMHighResTimeStamp for `time`
+    const animate = useCallback((time: DOMHighResTimeStamp): void => { 
         animationFrameIdRef.current = requestAnimationFrame(animate);
 
         if (!config.current.paused) {
@@ -960,11 +924,10 @@ const NeuralNetworkBackground: React.FC = () => {
     }, []);
 
 
-    // Function to process pulse queue
     const processPulseQueue = useCallback((): void => {
         if (clickQueueRef.current.length > 0 && pulseUniformsRef.current) {
             const pulse = clickQueueRef.current.shift();
-            if (pulse) { // Ensure pulse is not undefined after shift()
+            if (pulse) { 
                 for (let i = 0; i < 3; i++) {
                     if (pulseUniformsRef.current.uPulseTimes.value[i] < 0 || (pulseUniformsRef.current.uTime.value - pulseUniformsRef.current.uPulseTimes.value[i]) > 3.0) {
                         pulseUniformsRef.current.uPulsePositions.value[i].copy(pulse.position);
@@ -978,7 +941,6 @@ const NeuralNetworkBackground: React.FC = () => {
     }, []);
 
 
-    // Main Effect Hook for Three.js Initialization and Cleanup
     useEffect(() => {
         setIsClient(true);
 
@@ -1000,7 +962,6 @@ const NeuralNetworkBackground: React.FC = () => {
         currentRenderer.outputColorSpace = THREE.SRGBColorSpace;
         rendererRef.current = currentRenderer;
 
-        // Starfield
         const createStarfield = (): THREE.Points => {
             const count: number = 5000;
             const positions: number[] = [];
@@ -1009,7 +970,6 @@ const NeuralNetworkBackground: React.FC = () => {
                 const phi: number = Math.acos(Math.max(-1, Math.min(1, THREE.MathUtils.randFloatSpread(2))));
                 const theta: number = THREE.MathUtils.randFloat(0, Math.PI * 2);
                 
-                // Validate star positions to prevent NaN
                 const x = r * Math.sin(phi) * Math.cos(theta);
                 const y = r * Math.sin(phi) * Math.sin(theta);
                 const z = r * Math.cos(phi);
@@ -1021,10 +981,8 @@ const NeuralNetworkBackground: React.FC = () => {
                 );
             }
             
-            // Additional validation for the entire positions array
             const validatedPositions = positions.map(val => isFinite(val) ? val : 0);
             
-            // Only create starfield if we have valid positions
             if (validatedPositions.length > 0) {
                 const geo = new THREE.BufferGeometry();
                 geo.setAttribute('position', new THREE.Float32BufferAttribute(validatedPositions, 3));
@@ -1039,7 +997,6 @@ const NeuralNetworkBackground: React.FC = () => {
                 return new THREE.Points(geo, mat);
             }
             
-            // Return a minimal valid geometry if no valid positions
             const geo = new THREE.BufferGeometry();
             geo.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
             const mat = new THREE.PointsMaterial({
@@ -1056,7 +1013,6 @@ const NeuralNetworkBackground: React.FC = () => {
         currentScene.add(starField);
 
 
-        // Controls
         const currentControls = new OrbitControls(currentCamera, currentRenderer.domElement);
         currentControls.enableDamping = true;
         currentControls.dampingFactor = 0.05;
@@ -1068,8 +1024,6 @@ const NeuralNetworkBackground: React.FC = () => {
         currentControls.enablePan = false;
         controlsRef.current = currentControls;
 
-
-        // Post-processing
         const currentComposer = new EffectComposer(currentRenderer);
         currentComposer.addPass(new RenderPass(currentScene, currentCamera));
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.68);
@@ -1079,8 +1033,6 @@ const NeuralNetworkBackground: React.FC = () => {
         currentComposer.addPass(new OutputPass());
         composerRef.current = currentComposer;
 
-
-        // Pulse Uniforms
         pulseUniformsRef.current = {
             uTime: { value: 0.0 },
             uPulsePositions: { value: [new THREE.Vector3(1e3, 1e3, 1e3), new THREE.Vector3(1e3, 1e3, 1e3), new THREE.Vector3(1e3, 1e3, 1e3)] },
@@ -1091,17 +1043,13 @@ const NeuralNetworkBackground: React.FC = () => {
             uActivePalette: { value: 0 }
         };
 
-        // Initial network creation
         generateNeuralNetwork();
 
-        // Start animation loop
         animate(0);
 
-        // Start pulse processing
         pulseIntervalIdRef.current = setInterval(processPulseQueue, 100);
 
 
-        // Event Listeners for Resize and Click
         const handleResize = (): void => {
             if (currentCamera && currentRenderer && currentComposer) {
                 currentCamera.aspect = window.innerWidth / window.innerHeight;
@@ -1129,7 +1077,6 @@ const NeuralNetworkBackground: React.FC = () => {
         };
         canvas.addEventListener('click', handleClick);
 
-        // UI Event Listeners (casting elements to their specific HTML types)
         const pausePlayBtn = document.getElementById('pause-play-btn') as HTMLButtonElement | null;
         const resetCamBtn = document.getElementById('reset-camera-btn') as HTMLButtonElement | null;
         const changeFormationBtn = document.getElementById('change-formation-btn') as HTMLButtonElement | null;
@@ -1159,14 +1106,13 @@ const NeuralNetworkBackground: React.FC = () => {
             if (themeButtons) {
                 themeButtons.forEach(btn => btn.classList.remove('active'));
             }
-            // event.currentTarget is explicitly HTMLButtonElement due to ReactMouseEvent type
             event.currentTarget.classList.add('active');
-            config.current.activePaletteIndex = parseInt(event.currentTarget.dataset.theme || '0', 10); // Handle potential undefined dataset.theme
+            config.current.activePaletteIndex = parseInt(event.currentTarget.dataset.theme || '0', 10); 
             generateNeuralNetwork();
         };
 
         const handleDensityInput = (event: ChangeEvent<HTMLInputElement>): void => {
-            const slider = event.target; // event.target is already HTMLInputElement due to ChangeEvent<HTMLInputElement>
+            const slider = event.target;
             if (densityValueSpan) {
                 config.current.densityFactor = parseFloat(slider.value) / 100;
                 densityValueSpan.textContent = `${slider.value}%`;
@@ -1180,20 +1126,18 @@ const NeuralNetworkBackground: React.FC = () => {
         if (pausePlayBtn) pausePlayBtn.addEventListener('click', handlePausePlay);
         if (resetCamBtn) resetCamBtn.addEventListener('click', handleResetCamera);
         if (changeFormationBtn) changeFormationBtn.addEventListener('click', handleChangeFormation);
-        if (themeButtons) themeButtons.forEach(button => button.addEventListener('click', handleThemeChange as unknown as EventListener)); // Cast needed for general EventListener type
+        if (themeButtons) themeButtons.forEach(button => button.addEventListener('click', handleThemeChange as unknown as EventListener)); 
         if (densitySlider) {
-            densitySlider.addEventListener('input', handleDensityInput as unknown as EventListener); // Cast needed
-            densitySlider.addEventListener('change', handleDensityChange as unknown as EventListener); // Cast needed
+            densitySlider.addEventListener('input', handleDensityInput as unknown as EventListener); 
+            densitySlider.addEventListener('change', handleDensityChange as unknown as EventListener); 
         }
 
-        // Set initial active theme button
         const initialThemeButton = document.getElementById(`theme-${config.current.activePaletteIndex + 1}`) as HTMLButtonElement | null;
         if (initialThemeButton) {
             initialThemeButton.classList.add('active');
         }
 
 
-        // Cleanup function for useEffect
         return () => {
             if (animationFrameIdRef.current) {
                 cancelAnimationFrame(animationFrameIdRef.current);
@@ -1202,15 +1146,13 @@ const NeuralNetworkBackground: React.FC = () => {
                 clearInterval(pulseIntervalIdRef.current);
             }
             window.removeEventListener('resize', handleResize);
-            if (canvas) { // Use the canvas variable directly
+            if (canvas) { 
                 canvas.removeEventListener('click', handleClick);
             }
-            // Dispose of Three.js objects to prevent memory leaks
             if (currentRenderer) currentRenderer.dispose();
             if (currentScene) currentScene.clear();
             if (currentControls) currentControls.dispose();
 
-            // Remove UI event listeners
             if (pausePlayBtn) pausePlayBtn.removeEventListener('click', handlePausePlay);
             if (resetCamBtn) resetCamBtn.removeEventListener('click', handleResetCamera);
             if (changeFormationBtn) changeFormationBtn.removeEventListener('click', handleChangeFormation);
@@ -1226,7 +1168,7 @@ const NeuralNetworkBackground: React.FC = () => {
     return (
         <>
             <canvas ref={canvasRef} id="neural-network-canvas" className="w-full h-full block absolute top-0 left-0 z-0 min-w-full"></canvas>
-            {isClient && ( // Only render UI elements on the client side
+            {isClient && ( 
                 <>
                     <div id="instructions-container" className="ui-panel">
                         <div id="instruction-title">Interactive Neural Network</div>

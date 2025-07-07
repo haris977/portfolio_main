@@ -56,7 +56,6 @@ const Skills = () => {
 
 
       <div className="relative z-10 w-full max-w-7xl mx-auto">
-        {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -68,9 +67,7 @@ const Skills = () => {
           </h2>
         </motion.div>
 
-        {/* Sparkles right below "My Skills" - bubbles will flow through this */}
         <div className="relative z-10 mx-auto w-full max-w-xl h-40 px-4">
-  {/* Gradient lines */}
   <div className="absolute inset-x-0 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] blur-sm" />
   <div className="absolute inset-x-0 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px" />
   <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] blur-sm" />
@@ -88,8 +85,6 @@ const Skills = () => {
   <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
 </div>
 
-
-        {/* Mobile Skills Grid - Only show on small screens */}
         <div className="block lg:hidden">
           <motion.div 
             variants={containerVariants}
@@ -109,12 +104,11 @@ const Skills = () => {
                 className="group relative"
               >
                 <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 md:p-6 hover:border-gray-600/50 transition-all duration-300">
-                  {/* Skill Name */}
+                  
                   <h3 className="text-white font-semibold text-sm md:text-base mb-3 text-center">
                     {skill.name}
                   </h3>
                   
-                  {/* Progress Bar */}
                   <div className="w-full bg-gray-700/50 rounded-full h-2 md:h-3 mb-3">
                     <motion.div
                       initial={{ width: 0 }}
@@ -126,25 +120,21 @@ const Skills = () => {
                     </motion.div>
                   </div>
                   
-                  {/* Percentage */}
                   <p className="text-gray-300 text-xs md:text-sm text-center">
                     {skill.level}%
                   </p>
                 </div>
                 
-                {/* Hover Glow Effect */}
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl -z-10" />
               </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Desktop Bubbles - Only show on large screens */}
         <div className="hidden lg:block w-full h-[80vh] relative z-20 -mt-20">
           <SkillsBubblesFancy />
         </div>
 
-        {/* Additional Skills Section - Only show on small screens */}
         <div className="block lg:hidden">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}

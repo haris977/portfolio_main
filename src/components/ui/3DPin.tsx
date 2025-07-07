@@ -1,11 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils"; // utility for merging classNames
-
-// ----------------------
-// 🔹 PinPerspective Component
-// ----------------------
+import { cn } from "@/lib/utils"; 
 export const PinPerspective = ({
   title,
   href,
@@ -16,7 +12,7 @@ export const PinPerspective = ({
   return (
     <motion.div className="pointer-events-none w-96 h-80 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[60] transition duration-500">
       <div className="w-full h-full -mt-7 flex-none inset-0">
-        {/* Label */}
+        
         <div className="absolute top-0 inset-x-0 flex justify-center">
           <a
             href={href}
@@ -30,7 +26,6 @@ export const PinPerspective = ({
           </a>
         </div>
 
-        {/* Animated rings */}
         <div
           style={{ perspective: "1000px", transform: "rotateX(70deg) translateZ(0)" }}
           className="absolute left-1/2 top-1/2 ml-[0.09375rem] mt-4 -translate-x-1/2 -translate-y-1/2"
@@ -46,7 +41,6 @@ export const PinPerspective = ({
           ))}
         </div>
 
-        {/* Axis line & glow */}
         <>
           <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40 blur-[2px]" />
           <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40" />
@@ -58,9 +52,6 @@ export const PinPerspective = ({
   );
 };
 
-// ----------------------
-// 🔸 PinContainer Component
-// ----------------------
 export const PinContainer = ({
   children,
   title,
@@ -112,7 +103,6 @@ export const PinContainer = ({
           <div className={cn("relative z-50", className)}>{children}</div>
         </div>
       </div>
-      {/* Keep the label as a link */}
       <PinPerspective title={title} href={href} />
     </div>
   );

@@ -6,7 +6,6 @@ import votingapp from '../../public/voting_app.jpg';
 import pizzarunner from '../../public/pizza_runner_5.png';
 import passwordmanager from '../../public/passopmanager2.png';
 import { PinContainer } from '@/components/ui/3DPin';
-import { MaskContainer } from '@/components/ui/MaskEffect'
 type Project = {
   title: string;
   image: StaticImageData;
@@ -59,7 +58,6 @@ const MyProjects = () => {
           </PinContainer>
         </div>
         <div className='pb-10'>
-          {/* Second row */}
           <PinContainer title="Pizza Store Analysis" href="#">
             <div
               onClick={() =>
@@ -96,7 +94,6 @@ const MyProjects = () => {
           </PinContainer>
         </div>
       </div>
-      {/* Modal */}
       {selectedProject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-white w-[90%] max-w-lg rounded-lg p-6 shadow-lg relative overflow-y-auto max-h-[90vh]">

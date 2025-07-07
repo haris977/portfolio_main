@@ -38,98 +38,108 @@ const SkillsBubblesFancy: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current || !svgRef.current) return;
+  if (!containerRef.current || !svgRef.current) return;
 
-    const width = containerRef.current.clientWidth;
-    const height = containerRef.current.clientHeight;
+  const width = containerRef.current.clientWidth;
+  const height = containerRef.current.clientHeight;
 
-    const nodes = skills.map((skill) => ({
-      ...skill,
-      radius: skill.value,
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 2,
-      vy: (Math.random() - 0.5) * 2,
-    }));
+  type SkillNode = Skill & {
+    radius: number;
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+  };
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
+  const nodes: SkillNode[] = skills.map((skill) => ({
+    ...skill,
+    radius: skill.value,
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * 2,
+    vy: (Math.random() - 0.5) * 2,
+  }));
 
-    svg
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMidYMid meet");
+  const svg = d3.select(svgRef.current);
+  svg.selectAll("*").remove();
 
-    // Add texture
-    svg
-      .append("defs")
-      .append("pattern")
-      .attr("id", "bubblePattern")
-      .attr("patternUnits", "objectBoundingBox")
-      .attr("width", 1)
-      .attr("height", 1)
-      .append("image")
-      .attr("href", "/bubble_texture.png")
-      .attr("preserveAspectRatio", "xMidYMid slice")
-      .attr("width", 100)
-      .attr("height", 100);
+  svg
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
 
-    const node = svg
-      .selectAll("g")
-      .data(nodes)
-      .enter()
-      .append("g")
-      .attr("class", "bubble");
+  svg
+    .append("defs")
+    .append("pattern")
+    .attr("id", "bubblePattern")
+    .attr("patternUnits", "objectBoundingBox")
+    .attr("width", 1)
+    .attr("height", 1)
+    .append("image")
+    .attr("href", "/bubble_texture.png")
+    .attr("preserveAspectRatio", "xMidYMid slice")
+    .attr("width", 100)
+    .attr("height", 100);
 
-    node
-      .append("circle")
-      .attr("r", (d) => d.radius)
-      .attr("fill", "url(#bubblePattern)")
-      .attr("stroke", "#fff")
-      .attr("stroke-opacity", 0.3)
-      .attr("stroke-width", 1)
-      .attr("opacity", 0.9);
+  const node = svg
+    .selectAll<SVGGElement, SkillNode>("g")
+    .data(nodes)
+    .enter()
+    .append("g")
+    .attr("class", "bubble");
 
-    node
-      .append("text")
-      .text((d) => d.name)
-      .attr("text-anchor", "middle")
-      .attr("dy", "0.35em")
-      .style("fill", "#ffffff")
-      .style("font-size", "10px")
-      .style("pointer-events", "none");
+  node
+    .append("circle")
+    .attr("r", (d) => d.radius)
+    .attr("fill", "url(#bubblePattern)")
+    .attr("stroke", "#fff")
+    .attr("stroke-opacity", 0.3)
+    .attr("stroke-width", 1)
+    .attr("opacity", 0.9);
 
-    const simulation = d3
-      .forceSimulation(nodes as any)
-      .alphaDecay(0) // never cools down
-      .alphaTarget(0.3) // keeps heat to prevent freezing
-      .velocityDecay(0.05) // allow slow drift
-      .force(
-        "collide",
-        d3.forceCollide().radius((d: any) => d.radius + 2).iterations(2)
-      )
-      .force("float", () => {
-        for (const d of nodes) {
-          d.vx += (Math.random() - 0.5) * 0.2;
-          d.vy += (Math.random() - 0.5) * 0.2;
-        }
-      })
-      .on("tick", () => {
-        node.attr("transform", (d: any) => {
-          // Wall collision bounce
-          if (d.x - d.radius < 0 || d.x + d.radius > width) d.vx *= -1;
-          if (d.y - d.radius < 0 || d.y + d.radius > height) d.vy *= -1;
+  node
+    .append("text")
+    .text((d) => d.name)
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .style("fill", "#ffffff")
+    .style("font-size", "10px")
+    .style("pointer-events", "none");
 
-          d.x = Math.max(d.radius, Math.min(width - d.radius, d.x + d.vx));
-          d.y = Math.max(d.radius, Math.min(height - d.radius, d.y + d.vy));
+  const simulation = d3
+    .forceSimulation<SkillNode>(nodes)
+    .alphaDecay(0)
+    .alphaTarget(0.3)
+    .velocityDecay(0.05)
+    .force(
+      "collide",
+      d3.forceCollide<SkillNode>().radius((d) => d.radius + 2).iterations(2)
+    )
+    .force("float", () => {
+      for (const d of nodes) {
+        d.vx += (Math.random() - 0.5) * 0.2;
+        d.vy += (Math.random() - 0.5) * 0.2;
+      }
+    })
+    .on("tick", () => {
+      node.attr("transform", (d) => {
+        // Wall collision bounce
+        if (d.x - d.radius < 0 || d.x + d.radius > width) d.vx *= -1;
+        if (d.y - d.radius < 0 || d.y + d.radius > height) d.vy *= -1;
 
-          return `translate(${d.x}, ${d.y})`;
-        });
+        d.x = Math.max(d.radius, Math.min(width - d.radius, d.x + d.vx));
+        d.y = Math.max(d.radius, Math.min(height - d.radius, d.y + d.vy));
+
+        return `translate(${d.x}, ${d.y})`;
       });
+    });
 
-    simulation.restart(); // keep it alive
+  simulation.restart();
 
-    return () => simulation.stop();
-  }, []);
+  return () => {
+    simulation.stop();
+  };
+}, []);
+
 
   return (
     <div

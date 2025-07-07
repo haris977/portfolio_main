@@ -1,6 +1,5 @@
-import { div } from 'framer-motion/client'
+
 import React from 'react'
-import { HoverBorderGradient } from './ui/BorderGradient'
 const Footer = () => {
   return (
    

@@ -4,7 +4,6 @@ import {
   motion,
   AnimatePresence,
   useScroll,
-  useMotionValueEvent,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +14,6 @@ export const FloatingNav = ({
   navItems: {
     name: string;
     link: string;
-    // icon?: JSX.Element;
   }[];
   className?: string;
 }) => {
@@ -23,15 +21,12 @@ export const FloatingNav = ({
   const [activeSection, setActiveSection] = useState('home');
   const [isClient, setIsClient] = useState(false);
 
-  // Ensure client-side rendering
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Only use scroll progress on client side
   const { scrollYProgress } = useScroll();
 
-  // Scroll spy functionality - only run on client
   useEffect(() => {
     if (!isClient) return;
     
@@ -57,17 +52,14 @@ export const FloatingNav = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [navItems, isClient]);
 
-  // Only use motion value event on client side
   useEffect(() => {
     if (!isClient) return;
     
     const unsubscribe = scrollYProgress.on("change", (current) => {
-      // Check if current is not undefined and is a number
       if (typeof current === "number") {
         let direction = current - scrollYProgress.getPrevious()!;
 
         if (scrollYProgress.get() < 0.05) {
-          // also set true for the initial state
           setVisible(true);
         } else {
           if (direction < 0) {
@@ -82,7 +74,6 @@ export const FloatingNav = ({
     return unsubscribe;
   }, [scrollYProgress, isClient]);
 
-  // Don't render anything until client-side
   if (!isClient) {
     return null;
   }
@@ -140,11 +131,6 @@ export const FloatingNav = ({
             </a>
           );
         })}
-        {/* remove this login btn */}
-        {/* <button className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full">
-          <span>Login</span>
-          <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
-        </button> */}
       </motion.div>
     </AnimatePresence>
   );
