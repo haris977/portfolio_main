@@ -294,7 +294,7 @@ const NeuralNetworkBackground: React.FC = () => {
         const generateQuantumCortex = (): void => {
             rootNode = new Node(new THREE.Vector3(0, 0, 0), 0, 0); rootNode.size = 1.5; nodes.push(rootNode);
             rootNodeRef.current = rootNode; 
-            const layers: number = 5; 
+            // const layers: number = 5; // Removed unused variable 
             const primaryAxes: number = 6;
             const nodesPerAxis: number = 8;
             const axisLength: number = 20;
@@ -530,7 +530,7 @@ const NeuralNetworkBackground: React.FC = () => {
             const branchProbability: number = 0.6;
             const maxLevel: number = 5;
 
-            let queue: Node[] = [rootNode];
+            const queue: Node[] = [rootNode];
             let currentNodeCount: number = 1;
 
             while (queue.length > 0 && currentNodeCount < maxNodes) {
@@ -779,7 +779,7 @@ const NeuralNetworkBackground: React.FC = () => {
 
             if (validatedNodePositions.length > 0) {
                 const nodeMaterial = new THREE.ShaderMaterial({
-                    uniforms: pulseUniforms as unknown as { [uniform: string]: THREE.IUniform<any> }, // Cast to generic uniforms type
+                    uniforms: pulseUniforms as unknown as { [uniform: string]: THREE.IUniform<unknown> }, // Cast to generic uniforms type
                     vertexShader: nodeShader.vertexShader,
                     fragmentShader: nodeShader.fragmentShader,
                     transparent: true,
@@ -876,7 +876,7 @@ const NeuralNetworkBackground: React.FC = () => {
 
             if (validatedConnectionPositions.length > 0) {
                 const connectionMaterial = new THREE.ShaderMaterial({
-                    uniforms: pulseUniforms as unknown as { [uniform: string]: THREE.IUniform<any> },
+                    uniforms: pulseUniforms as unknown as { [uniform: string]: THREE.IUniform<unknown> },
                     vertexShader: connectionShader.vertexShader,
                     fragmentShader: connectionShader.fragmentShader,
                     transparent: true,

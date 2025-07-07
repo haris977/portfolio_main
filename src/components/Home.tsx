@@ -1,4 +1,4 @@
-import { div } from 'framer-motion/client';
+// Removed unused import
 import Image from 'next/image';
 import Rotatingword from './Rotatingword';
 import FallingStar from './ui/FallingStar';

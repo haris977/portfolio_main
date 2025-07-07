@@ -57,7 +57,7 @@ export const FloatingNav = ({
     
     const unsubscribe = scrollYProgress.on("change", (current) => {
       if (typeof current === "number") {
-        let direction = current - scrollYProgress.getPrevious()!;
+        const direction = current - scrollYProgress.getPrevious()!;
 
         if (scrollYProgress.get() < 0.05) {
           setVisible(true);
@@ -103,7 +103,7 @@ export const FloatingNav = ({
           border: "1px solid rgba(255, 255, 255, 0.125)",
         }}
       >
-        {navItems.map((navItem: any, idx: number) => {
+        {navItems.map((navItem: { name: string; link: string }, idx: number) => {
           const isActive = activeSection === navItem.link.substring(1);
           return (
             <a
@@ -126,7 +126,7 @@ export const FloatingNav = ({
                   : "text-white hover:text-blue-400 hover:bg-white/10"
               )}
             >
-              <span className="block sm:hidden">{navItem.icon}</span>
+              {/* Icon removed as it's not in the navItem type */}
               <span className="text-xs md:text-sm !cursor-pointer font-medium">{navItem.name}</span>
             </a>
           );
