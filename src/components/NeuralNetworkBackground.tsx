@@ -963,7 +963,7 @@ const NeuralNetworkBackground: React.FC = () => {
         rendererRef.current = currentRenderer;
 
         const createStarfield = (): THREE.Points => {
-            const count: number = 5000;
+            const count: number = 2500;
             const positions: number[] = [];
             for (let i = 0; i < count; i++) {
                 const r: number = THREE.MathUtils.randFloat(40, 120);
@@ -1000,7 +1000,7 @@ const NeuralNetworkBackground: React.FC = () => {
             const geo = new THREE.BufferGeometry();
             geo.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
             const mat = new THREE.PointsMaterial({
-                color: 0xffffff,
+                color: 0x888888,
                 size: 0.15,
                 sizeAttenuation: true,
                 depthWrite: false,

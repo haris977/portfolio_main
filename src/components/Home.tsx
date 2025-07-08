@@ -8,7 +8,7 @@ import { FloatingDockDemo } from './InformationMe';
 import BubbleContact from './ui/BubbleContact'
 const Home = () => {
   return (
-    <div id="home" className="relative min-h-screen bg-black w-full">
+    <div id="home" className="relative min-h-screen bg-black w-screen">
       
       <div className="absolute inset-0 z-5 w-full min-w-full">
         <NeuralNetworkBackground />

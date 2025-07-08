@@ -32,9 +32,9 @@ html {
   left: 50%;
   top: 90%;
   height: 4px;
-  background: linear-gradient(-45deg, #5F91FF, rgba(0, 0, 255, 0));
+  background: linear-gradient(-45deg, #0c41b5, rgba(0, 0, 255, 0));
   border-radius: 999px;
-  filter: drop-shadow(0 0 6px #699BFF);
+  filter: drop-shadow(0 0 6px #0c41b5);
   animation: tail 3s ease-in-out infinite, falling 3s ease-in-out infinite;
 }
 
@@ -66,7 +66,7 @@ html {
   top: calc(50% - 2px);
   right: 0;
   height: 4px;
-  background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5F91FF, rgba(0, 0, 255, 0));
+  background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #0c41b5, rgba(0, 0, 255, 0));
   border-radius: 100%;
   transform: translateX(50%) rotateZ(45deg);
   animation: shining 3s ease-in-out infinite;

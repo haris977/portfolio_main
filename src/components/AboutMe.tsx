@@ -7,7 +7,7 @@ import NeuralNetworkBackground from '@/components/NeuralNetworkBackground';
 
 const AboutMe = () => {
   return (
-    <div id="about" className="relative w-full pt-10 h-screen bg-black flex flex-col items-center min-w-full">
+    <div id="about" className="relative w-screen pt-10 h-screen bg-black ">
       <div className="absolute inset-0 z-5 w-full min-w-full">
         <NeuralNetworkBackground />
       </div>
