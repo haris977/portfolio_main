@@ -963,7 +963,7 @@ const NeuralNetworkBackground: React.FC = () => {
         rendererRef.current = currentRenderer;
 
         const createStarfield = (): THREE.Points => {
-            const count: number = 2500;
+            const count: number = 3000;
             const positions: number[] = [];
             for (let i = 0; i < count; i++) {
                 const r: number = THREE.MathUtils.randFloat(40, 120);
