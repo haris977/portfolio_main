@@ -22,6 +22,10 @@ const Skills = () => {
     { name: "OOPs", level: 82, color: "from-indigo-500 to-purple-500" },
     { name: "DBMS", level: 78, color: "from-blue-600 to-indigo-600" },
     { name: "Time Management", level: 85, color: "from-green-500 to-emerald-500" },
+    { name: "Kafka", level: 80, color: "from-green-400 to-yellow-600" },
+    { name: "Java", level: 80, color: "from-white-400 to-green-600" },
+    { name: "Docker", level: 75, color: "from-red-400 to-yellow-600" },
+    { name: "TypeScript", level: 80, color: "from-Purple-400 to-yellow-600" }
   ];
 
   const containerVariants = {

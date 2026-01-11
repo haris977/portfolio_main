@@ -32,6 +32,8 @@ const AboutMe = () => {
             <li className="relative before:content-['✅']">
               Experience:
               <ul className="pl-6">
+                <li className="relative before:content-['✨']">Internship at Constelli Signals</li>
+                <li className="relative before:content-['✨']">Internship in Zedd Labz</li>
                 <li className="relative before:content-['✨']">Internship in ONGC</li>
               </ul>
             </li>

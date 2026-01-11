@@ -9,7 +9,7 @@ type Skill = {
 
   const skills: Skill[] = [
   { name: "C++", value: 50 },
-  { name: "Python", value: 25 },
+  { name: "Python", value: 43 },
   { name: "MySQL", value: 35 },
   { name: "HTML", value: 40 },
   { name: "CSS", value: 39 },
@@ -19,17 +19,21 @@ type Skill = {
   { name: "Node.js", value: 36 },
   { name: "Express.js", value: 43 },
   { name: "MongoDB", value: 36 },
-  { name: "MS Excel", value: 30 },
+  { name: "MS Excel", value: 36 },
   { name: "MS PowerPoint", value: 30 },
-  { name: "Cloudinary", value: 22 },
-  { name: "Mongoose", value: 22 },
+  { name: "Cloudinary", value: 32 },
+  { name: "Mongoose", value: 34 },
   { name: "DBMS", value: 38 },
   { name: "OOPs", value: 45 },
-  { name: "OS", value: 30 },
+  { name: "OS", value: 38 },
   { name: "Problem Solving", value: 48 },
   { name: "Time Management", value: 45 },
   { name: "Adaptability", value: 47 },
   { name: "Next.js", value: 34 },
+  { name: "Kafka", value: 43 },
+  { name: "Docker", value: 39 },
+  { name: "TypeScript", value: 41 },
+  { name: "Java", value: 45 },
 ];
 
 

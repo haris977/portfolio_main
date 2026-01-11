@@ -25,7 +25,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="flex justify-center md:justify-end">
+        <div className="w-48 h-48 md:w-72 md:h-72 rounded-full overflow-hidden shadow-[0_0_30px_10px_rgba(255,255,255,0.5)]">
           <Image
             src="/MY_best_pic_corp_copy-removebg-preview.png"
             alt="My Best Pic"

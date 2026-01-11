@@ -1,15 +1,15 @@
 "use client";
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import studynotion from '../../public/studynotion2.png';
 import votingapp from '../../public/voting_app.jpg';
 import pizzarunner from '../../public/pizza_runner_5.png';
-import passwordmanager from '../../public/passopmanager2.png';
+import AIImageAnalyzer from '../../public/AI_Image_Analizer.png'
 import { PinContainer } from '@/components/ui/3DPin';
 type Project = {
   title: string;
   image: StaticImageData;
-  details: string;
+  details: ReactNode;
 };
 
 const MyProjects = () => {
@@ -28,11 +28,46 @@ const MyProjects = () => {
                 setSelectedProject({
                   title: "StudyNotion",
                   image: studynotion,
-                  details: `– Developed a full-stack website for creating and buying courses.\n– Implemented sign-up and login functionalities using JWT tokens and cookies.\n– Used Cloudinary for image and video uploads. Integrated Razorpay for payment.\n– Tech stack: MERN, Tailwind, Cloudinary, MongoDB Atlas, Mongoose, Razorpay.\n– [Project Link](https://studynotion-r9xx.vercel.app/)`
+                  details: (
+                    <div className="space-y-2">
+                      <p>– Developed a full-stack website for creating and buying courses.</p>
+                      <p>– Implemented sign-up and login functionalities using JWT tokens and cookies.</p>
+                      <p>– Used Cloudinary for image and video uploads. Integrated Razorpay for payment.</p>
+                      <p>
+                        – Tech stack: MERN, Tailwind, Cloudinary, MongoDB Atlas, Mongoose, Razorpay.
+                      </p>
+                      <p>
+                        –{" "}
+                        <a
+                          href="https://github.com/haris977/study_notion"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Project GitHub Link
+                        </a>
+                      </p>
+                      <p>
+                        –{" "}
+                        <a
+                          href="https://studynotion-r9xx.vercel.app/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline"
+                          onClick={(e) => e.stopPropagation()} // 👈 IMPORTANT
+                        >
+                          Project Link
+                        </a>
+                      </p>
+
+                    </div>
+                  ),
                 })
               }
               className="flex cursor-pointer flex-col tracking-tight text-slate-100/50 w-[20rem] h-[20rem]"
             >
+
               <h3 className="font-bold text-base text-slate-100 mb-1">StudyNotion</h3>
               <p className="text-slate-500 mb-2 text-sm">Platform where teachers help students.</p>
               <Image src={studynotion} alt='StudyNotion' className='rounded-xl' />
@@ -46,11 +81,33 @@ const MyProjects = () => {
                 setSelectedProject({
                   title: "Voting App",
                   image: votingapp,
-                  details: `– Developed a secure voting backend system and integrated a robust REST API.\n– Aadhar-based authentication (JWT) with password security and duplicate vote protection.\n– Tech Stack: Node.js, Express.js, MongoDB`
+                  details: (
+                    <div className="space-y-2">
+                      <p>– Developed a secure voting backend system and integrated a robust REST API.</p>
+                      <p>
+                        – Aadhar-based authentication (JWT) with password security and duplicate vote
+                        protection.
+                      </p>
+                      <p>– Tech Stack: Node.js, Express.js, MongoDB</p>
+                      <p>
+                        –{" "}
+                        <a
+                          href="https://github.com/haris977/Secure-Voting-System"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Project GitHub Link
+                        </a>
+                      </p>
+                    </div>
+                  ),
                 })
               }
               className="flex pb-10 cursor-pointer flex-col tracking-tight text-slate-100/50 w-[20rem] h-[20rem]"
             >
+
               <h3 className="font-bold text-base text-slate-100 mb-1">Voting App</h3>
               <p className="text-slate-500 mb-2 text-sm">You can vote via internet.</p>
               <Image src={votingapp} alt='Voting App' className='rounded-xl' />
@@ -64,11 +121,34 @@ const MyProjects = () => {
                 setSelectedProject({
                   title: "Pizza Store Analysis",
                   image: pizzarunner,
-                  details: `– Analyzed ER diagrams and used advanced SQL (CASE, ALTER) for data cleaning.\n– Optimized store performance: sales, delivery time, and ingredient use.\n– Tech Stack: MySQL Workbench`
+                  details: (
+                    <div className="space-y-2">
+                      <p>
+                        – Analyzed ER diagrams and used advanced SQL (CASE, ALTER) for data cleaning.
+                      </p>
+                      <p>
+                        – Optimized store performance: sales, delivery time, and ingredient use.
+                      </p>
+                      <p>– Tech Stack: MySQL Workbench</p>
+                      <p>
+                        –{" "}
+                        <a
+                          href="https://onedrive.live.com/view.aspx?resid=E38FEB9C024EB577!sc96662057fd446209092adbb8fd18cf1&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2IvYy9lMzhmZWI5YzAyNGViNTc3L0VRVmlac25VZnlCR2tKS3R1NF9SalBFQjU3aWFTOXlQeUtqMFlOVDhJWmZSdVE_ZT15dHhIbnQ"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Project Link
+                        </a>
+                      </p>
+                    </div>
+                  ),
                 })
               }
               className="flex pb-10 cursor-pointer flex-col tracking-tight text-slate-100/50 w-[20rem] h-[20rem]"
             >
+
               <h3 className="font-bold text-base text-slate-100 mb-1">Pizza Runner</h3>
               <p className="text-slate-500 mb-2 text-sm">Restaurant where you can order pizza.</p>
               <Image src={pizzarunner} alt='Pizza Runner' className='rounded-xl' />
@@ -76,20 +156,39 @@ const MyProjects = () => {
           </PinContainer>
         </div>
         <div className='pb-10'>
-          <PinContainer title="Password Manager" href="#">
-            <div
+          <PinContainer title="AI Image Analyzer" href="#">
+            <div 
               onClick={() =>
                 setSelectedProject({
-                  title: "Password Manager",
-                  image: passwordmanager,
-                  details: `– Developed a secure and user-friendly password management app using the MERN stack.\n– Core features: create, edit, delete, and save user profiles.\n– Tech Stack: HTML, Tailwind, CSS, React.js, MongoDB`
+                  title: "AI Image Analyzer",
+                  image: AIImageAnalyzer,
+                  details: (
+                    <div className="space-y-2">
+                      <p>– Built an AI-powered Image Analyzer using Google Gemini API.</p>
+                      <p>– Integrated Next.js frontend with Node.js + Express backend.</p>
+                      <p>– Tech Stack: Next.js, Node.js, Express.js, Gemini API</p>
+                      <p>
+                        –{" "}
+                        <a
+                          href="https://github.com/haris977/image_analyzer"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Project GitHub Link
+                        </a>
+                      </p>
+                    </div>
+                  ),
                 })
               }
               className="flex cursor-pointer flex-col tracking-tight text-slate-100/50 w-[20rem] h-[20rem]"
             >
-              <h3 className="font-bold text-base text-slate-100 mb-1">Password Manager</h3>
-              <p className="text-slate-500 mb-2 text-sm">Platform where you can store your passwords.</p>
-              <Image src={passwordmanager} alt='Password Manager' className='rounded-xl' />
+
+              <h3 className="font-bold text-base text-slate-100 mb-1">AI Image Analyzer</h3>
+              <p className="text-slate-500 mb-2 text-sm">A platform where you can Analyze your subject of intrest image</p>
+              <Image src={AIImageAnalyzer} alt='AI Image Analyzer' className='rounded-xl' />
             </div>
           </PinContainer>
         </div>
@@ -109,9 +208,10 @@ const MyProjects = () => {
               alt={selectedProject.title}
               className="rounded-lg mb-4 w-full max-h-48 object-contain"
             />
-            {selectedProject.details.split('\n').map((line, i) => (
-              <p key={i} className="text-gray-700 text-sm mb-2">{line}</p>
-            ))}
+            <div className="text-gray-700 text-sm">
+              {selectedProject.details}
+            </div>
+
           </div>
         </div>
       )}
